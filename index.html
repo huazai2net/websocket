@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    <body >
+        <div style="margin-left: 650px;">
+            <form id="Form"> 
+                <input type="input" name="" id="SendInfo" value="" />
+                <button type="submit">提交</button>
+            </form>
+    
+            <div id="hello" style="border: dashed 1px black;height: 500px;width: 500px;margin-top: 10px;">
+            
+            </div>
+        </div>
+        
+    </body>
+    <script type="text/javascript">
+        var test=function(){
+            
+            var print=document.getElementById('hello');
+            var form = document.getElementById('Form');
+            var input = document.getElementById('SendInfo');
+            print.innerHTML += "connecting to server ..<br/>";        
+            window.ws = new WebSocket('ws://localhost:9898/');      //监听webscoket服务端口
+        
+            //监听消息状态
+            ws.onmessage=function(eve){
+                print.innerHTML+=eve.data+'<br/>'
+            }
+            
+            //监听链接状态
+            ws.onopen=function(){
+                print.innerHTML+='connection open <br/>'
+            }
+            
+            //监听关闭状态
+            ws.onclose = function () {
+                print.innerHTML += 'connection closed<br/>';
+            }
+
+               //向服务器端发送消息
+               form.addEventListener('submit',function(e){
+                   e.preventDefault();
+                   var val="客户端："+input.value;
+                   ws.send(val);
+                   input.value="";
+               })
+               
+        }
+        
+        window.onload=test();
+    </script>
+</html>
